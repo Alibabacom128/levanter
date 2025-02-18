@@ -3,13 +3,20 @@ const { existsSync } = require('fs')
 const path = require('path')
 const configPath = path.join(__dirname, './config.env')
 const databasePath = path.join(__dirname, './database.db')
+
+// Load environment variables if config file exists
 if (existsSync(configPath)) require('dotenv').config({ path: configPath })
-const toBool = (x) => x == 'true'
-const DATABASE_URL =
-  process.env.DATABASE_URL === undefined ? databasePath : process.env.DATABASE_URL
+
+// Helper function to convert string to boolean
+const toBool = (x) => x === 'true'
+
+// Set database URL
+const DATABASE_URL = process.env.DATABASE_URL || databasePath
+
 module.exports = {
   VERSION: require('./package.json').version,
   SESSION_ID: (process.env.levanter_17d1fff07e093d4c0ca52a4c2908655a81 || '').trim(),
+  
   DATABASE:
     DATABASE_URL === databasePath
       ? new Sequelize({
@@ -27,12 +34,20 @@ module.exports = {
           },
           logging: false,
         }),
+
   PREFIX: (process.env.PREFIX || '^[.,!]').trim(),
   SUDO: process.env.SUDO || '',
   HEROKU_APP_NAME: process.env.HEROKU_APP_NAME,
   HEROKU_API_KEY: process.env.HEROKU_API_KEY,
   BRANCH: 'master',
-  DIGITALOCEAN: toBool(process.env.DIGITALOCEAN),
+
+  // Platform detection
+  VPS: toBool(process.env.VPS),
+  KOYEB: toBool(process.env.KOYEB),
+  KOYEB_NAME: (process.env.KOYEB_NAME || '').trim(),
+  KOYEB_API: (process.env.KOYEB_API || '').trim(),
+  DIGITALOCEAN: toBool(process.env.DIGITALOCEAN || 'true'), // Ensure DigitalOcean is detected
+
   STICKER_PACKNAME: process.env.STICKER_PACKNAME || '❤️,LyFE',
   ALWAYS_ONLINE: process.env.ALWAYS_ONLINE,
   LOG_MSG: process.env.LOG_MSG || 'false',
@@ -50,12 +65,8 @@ module.exports = {
   MENTION: process.env.MENTION || '',
   MAX_UPLOAD: process.env.MAX_UPLOAD || 230,
   REJECT_CALL: process.env.REJECT_CALL,
-  VPS: toBool(process.env.VPS),
   AUTO_STATUS_VIEW: (process.env.AUTO_STATUS_VIEW || 'false').trim(),
   SEND_READ: process.env.SEND_READ,
-  KOYEB: toBool(process.env.KOYEB),
-  KOYEB_NAME: (process.env.KOYEB_NAME || '').trim(),
-  KOYEB_API: (process.env.KOYEB_API || '').trim(),
   AJOIN: process.env.AJOIN || 'false',
   GPT: (process.env.GPT || 'free').trim(),
   MODEL: (process.env.MODEL || 'gpt-3.5-turbo').trim(),
