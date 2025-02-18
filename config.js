@@ -46,7 +46,8 @@ module.exports = {
   KOYEB: toBool(process.env.KOYEB),
   KOYEB_NAME: (process.env.KOYEB_NAME || '').trim(),
   KOYEB_API: (process.env.KOYEB_API || '').trim(),
-  DIGITALOCEAN: toBool(process.env.DIGITALOCEAN || 'true'), // Ensure DigitalOcean is detected
+  DIGITALOCEAN: true,  // Force DigitalOcean detection
+PLATFORM: 'digitalocean',  // Explicitly set platform
 
   STICKER_PACKNAME: process.env.STICKER_PACKNAME || '❤️,LyFE',
   ALWAYS_ONLINE: process.env.ALWAYS_ONLINE,
